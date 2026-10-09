@@ -1,3 +1,4 @@
+
 import type { Usuario } from "../types/Usuario";
 
 interface UsuarioItemProps {
@@ -5,11 +6,7 @@ interface UsuarioItemProps {
 }
 
 function UsuarioItem({ usuario }: UsuarioItemProps) {
-    return (
-        <li>
-            <strong>{usuario.nome}</strong> ({usuario.username}) — {usuario.email}
-        </li>
-    );
+    return <strong>{usuario.nome}</strong>;
 }
 
 export default UsuarioItem;

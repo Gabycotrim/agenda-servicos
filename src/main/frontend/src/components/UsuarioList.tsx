@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import api from "../services/api";
 import type { Usuario } from "../types/Usuario";
@@ -5,13 +6,16 @@ import UsuarioItem from "./UsuarioItem";
 import UsuarioForm from "./UsuarioForm";
 
 function UsuarioList() {
-
     const [usuarios, setUsuarios] = useState<Usuario[]>([]);
     const [editando, setEditando] = useState<Usuario | null>(null);
 
     async function carregarUsuarios() {
-        const resposta = await api.get<Usuario[]>("/usuarios");
-        setUsuarios(resposta.data);
+        try {
+            const resposta = await api.get<Usuario[]>("/usuarios");
+            setUsuarios(resposta.data);
+        } catch (erro) {
+            console.error("Erro ao carregar usuários:", erro);
+        }
     }
 
     useEffect(() => {
@@ -19,8 +23,23 @@ function UsuarioList() {
     }, []);
 
     async function excluir(id: number) {
-        await api.delete(`/usuarios/${id}`);
-        carregarUsuarios();
+        const confirmar = window.confirm(
+            "Tem certeza de que deseja excluir este usuário?"
+        );
+
+        if (!confirmar) return;
+
+        try {
+            await api.delete(`/usuarios/${id}`);
+            await carregarUsuarios();
+
+            if (editando?.id === id) {
+                setEditando(null);
+            }
+        } catch (erro) {
+            console.error("Erro ao excluir usuário:", erro);
+            alert("Não foi possível excluir o usuário.");
+        }
     }
 
     function editar(usuario: Usuario) {
@@ -33,34 +52,94 @@ function UsuarioList() {
     }
 
     return (
-        <div>
+        <div className="usuarios-container">
+            <header className="usuarios-cabecalho">
+                <div>
+                    <h2>Usuários cadastrados</h2>
+                    <p>Consulte e gerencie os usuários do sistema.</p>
+                </div>
 
-            <UsuarioForm
-                key={editando?.id ?? "novo"}
-                usuarioEditando={editando}
-                onUsuarioSalvo={usuarioSalvo}
-            />
+                <span className="usuarios-contador">
+                    {usuarios.length}{" "}
+                    {usuarios.length === 1 ? "usuário" : "usuários"}
+                </span>
+            </header>
 
-            <h2>Usuários cadastrados</h2>
+            <section className="usuarios-formulario">
+                <h3>
+                    {editando ? "Editar usuário" : "Cadastrar usuário"}
+                </h3>
 
-            <ul>
-                {usuarios.map((usuario) => (
-                    <li key={usuario.id}>
+                <UsuarioForm
+                    key={editando?.id ?? "novo"}
+                    usuarioEditando={editando}
+                    onUsuarioSalvo={usuarioSalvo}
+                />
 
-                        <UsuarioItem usuario={usuario} />
+                {editando && (
+                    <button
+                        type="button"
+                        className="botao-cancelar"
+                        onClick={() => setEditando(null)}
+                    >
+                        Cancelar edição
+                    </button>
+                )}
+            </section>
 
-                        <button onClick={() => editar(usuario)}>
-                            Editar
-                        </button>
+            <section className="usuarios-tabela-container">
+                <div className="tabela-scroll">
+                    <table className="usuarios-tabela">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Usuário</th>
+                                <th>E-mail</th>
+                                <th className="coluna-acoes">Ações</th>
+                            </tr>
+                        </thead>
 
-                        <button onClick={() => excluir(usuario.id)}>
-                            Excluir
-                        </button>
+                        <tbody>
+                            {usuarios.length === 0 ? (
+                                <tr>
+                                    <td colSpan={4} className="tabela-vazia">
+                                        Nenhum usuário cadastrado.
+                                    </td>
+                                </tr>
+                            ) : (
+                                usuarios.map((usuario) => (
+                                    <tr key={usuario.id}>
+                                        <td>
+                                            <UsuarioItem usuario={usuario} />
+                                        </td>
+                                        <td>{usuario.username}</td>
+                                        <td>{usuario.email}</td>
+                                        <td>
+                                            <div className="acoes-tabela">
+                                                <button
+                                                    type="button"
+                                                    className="botao-editar"
+                                                    onClick={() => editar(usuario)}
+                                                >
+                                                    Editar
+                                                </button>
 
-                    </li>
-                ))}
-            </ul>
-
+                                                <button
+                                                    type="button"
+                                                    className="botao-excluir"
+                                                    onClick={() => excluir(usuario.id)}
+                                                >
+                                                    Excluir
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))
+                            )}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
         </div>
     );
 }

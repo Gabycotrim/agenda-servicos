@@ -1,12 +1,8 @@
-import UsuarioList from "./components/UsuarioList";
+import "./App.css";
+import UsuariosPage from "./pages/UsuariosPage";
 
 function App() {
-    return (
-        <div>
-            <h1>Usuários cadastrados</h1>
-            <UsuarioList />
-        </div>
-    );
+    return <UsuariosPage />;
 }
 
 export default App;
