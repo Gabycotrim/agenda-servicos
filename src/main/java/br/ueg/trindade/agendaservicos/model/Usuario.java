@@ -1,10 +1,19 @@
 package br.ueg.trindade.agendaservicos.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 
 @Entity
 public class Usuario {
@@ -21,7 +30,18 @@ public class Usuario {
 
     private String email;
 
+    @ManyToMany
+    @JoinTable(
+    name = "usuario_permissao",
+    joinColumns = @JoinColumn(name = "usuario_id"),
+    inverseJoinColumns = @JoinColumn(name = "permissao_id")
+    )
+    @JsonManagedReference
+    private Set<Permissao> permissoes = new HashSet<>();
+
     public Usuario() {
+
+    
     }
 
     public Usuario(String nome, String username, String senha, String email) {
@@ -70,4 +90,13 @@ public class Usuario {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    public Set<Permissao> getPermissoes() {
+    return permissoes;
+    }
+
+    public void setPermissoes(Set<Permissao> permissoes) {
+    this.permissoes = permissoes;
+    }
+    
 }

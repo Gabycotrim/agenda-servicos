@@ -34,6 +34,19 @@ public class UsuarioController {
         return usuarioService.buscarPorId(id);
     }
 
+    @GetMapping("/usuarios/{id}/permissoes")
+    public Usuario getPermissoesUsuario(@PathVariable Long id) {
+    return usuarioService.buscarPorId(id);
+    }
+
+    @PutMapping("/usuarios/{id}/permissoes")
+    public Usuario atribuirPermissoes(
+        @PathVariable Long id,
+        @RequestBody List<Long> idsPermissoes) {
+
+    return usuarioService.atribuirPermissoes(id, idsPermissoes);
+    }
+
     @PostMapping("/usuarios")
     public Usuario createUsuario(@RequestBody Usuario usuario) {
         return usuarioService.criar(usuario);

@@ -1,8 +1,9 @@
+
 import "./App.css";
-import UsuariosPage from "./pages/UsuariosPage";
+import UsuarioPermissoesPage from "./pages/UsuarioPermissoesPage";
 
 function App() {
-    return <UsuariosPage />;
+    return <UsuarioPermissoesPage />;
 }
 
 export default App;
