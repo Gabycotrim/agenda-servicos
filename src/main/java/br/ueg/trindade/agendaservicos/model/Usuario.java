@@ -3,7 +3,6 @@ package br.ueg.trindade.agendaservicos.model;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
@@ -36,7 +35,6 @@ public class Usuario {
     joinColumns = @JoinColumn(name = "usuario_id"),
     inverseJoinColumns = @JoinColumn(name = "permissao_id")
     )
-    @JsonManagedReference
     private Set<Permissao> permissoes = new HashSet<>();
 
     public Usuario() {

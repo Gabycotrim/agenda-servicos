@@ -5,6 +5,7 @@ import api from "../services/api";
 import type { Usuario } from "../types/Usuario";
 import UsuarioItem from "./UsuarioItem";
 import UsuarioForm from "./UsuarioForm";
+import Botao from "./Botao";
 
 function UsuarioList() {
     const [usuarios, setUsuarios] = useState<Usuario[]>([]);
@@ -53,21 +54,25 @@ function UsuarioList() {
     }
 
     return (
-        <div className="usuarios-container">
-            <header className="usuarios-cabecalho">
+        <div className="space-y-6">
+            <header className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
                 <div>
-                    <h2>Usuários cadastrados</h2>
-                    <p>Consulte e gerencie os usuários do sistema.</p>
+                    <h2 className="text-2xl font-bold text-gray-800">
+                        Usuários cadastrados
+                    </h2>
+                    <p className="mt-1 text-sm text-gray-600">
+                        Consulte e gerencie os usuários do sistema.
+                    </p>
                 </div>
 
-                <span className="usuarios-contador">
+                <span className="inline-flex w-fit rounded-full bg-blue-100 px-3 py-1 text-sm font-semibold text-blue-800">
                     {usuarios.length}{" "}
                     {usuarios.length === 1 ? "usuário" : "usuários"}
                 </span>
             </header>
 
-            <section className="usuarios-formulario">
-                <h3>
+            <section className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm sm:p-6">
+                <h3 className="mb-4 text-lg font-semibold text-gray-800">
                     {editando ? "Editar usuário" : "Cadastrar usuário"}
                 </h3>
 
@@ -78,66 +83,86 @@ function UsuarioList() {
                 />
 
                 {editando && (
-                    <button
-                        type="button"
-                        className="botao-cancelar"
-                        onClick={() => setEditando(null)}
-                    >
-                        Cancelar edição
-                    </button>
+                    <div className="mt-3">
+                        <Botao
+                            type="button"
+                            variante="neutro"
+                            onClick={() => setEditando(null)}
+                        >
+                            Cancelar edição
+                        </Botao>
+                    </div>
                 )}
             </section>
 
-            <section className="usuarios-tabela-container">
-                <div className="tabela-scroll">
-                    <table className="usuarios-tabela">
-                        <thead>
+            <section className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
+                <div className="border-b border-gray-200 px-4 py-4 sm:px-6">
+                    <h3 className="text-lg font-semibold text-gray-800">
+                        Lista de usuários
+                    </h3>
+                </div>
+
+                <div className="overflow-x-auto">
+                    <table className="w-full min-w-[650px] border-collapse text-left text-sm">
+                        <thead className="bg-gray-50 text-xs uppercase tracking-wider text-gray-600">
                             <tr>
-                                <th>Nome</th>
-                                <th>Usuário</th>
-                                <th>E-mail</th>
-                                <th className="coluna-acoes">Ações</th>
+                                <th className="px-4 py-3 font-semibold">Nome</th>
+                                <th className="px-4 py-3 font-semibold">Usuário</th>
+                                <th className="px-4 py-3 font-semibold">E-mail</th>
+                                <th className="px-4 py-3 font-semibold">Ações</th>
                             </tr>
                         </thead>
 
-                        <tbody>
+                        <tbody className="divide-y divide-gray-200">
                             {usuarios.length === 0 ? (
                                 <tr>
-                                    <td colSpan={4} className="tabela-vazia">
+                                    <td
+                                        colSpan={4}
+                                        className="px-4 py-8 text-center text-gray-500"
+                                    >
                                         Nenhum usuário cadastrado.
                                     </td>
                                 </tr>
                             ) : (
                                 usuarios.map((usuario) => (
-                                    <tr key={usuario.id}>
-                                        <td>
+                                    <tr
+                                        key={usuario.id}
+                                        className="hover:bg-gray-50"
+                                    >
+                                        <td className="px-4 py-3 font-medium text-gray-800">
                                             <UsuarioItem usuario={usuario} />
                                         </td>
-                                        <td>{usuario.username}</td>
-                                        <td>{usuario.email}</td>
-                                        <td>
-                                            <div className="acoes-tabela">
-                                                <Link to={`/usuarios/${usuario.id}`}
-                                                    className="botao-editar"
-                                                    >
+                                        <td className="px-4 py-3 text-gray-600">
+                                            {usuario.username}
+                                        </td>
+                                        <td className="px-4 py-3 text-gray-600">
+                                            {usuario.email}
+                                        </td>
+                                        <td className="px-4 py-3">
+                                            <div className="flex flex-wrap gap-2">
+                                                <Link
+                                                    to={`/usuarios/${usuario.id}`}
+                                                    className="inline-flex rounded-md bg-blue-100 px-3 py-2 text-xs font-medium text-blue-800 hover:bg-blue-200"
+                                                >
                                                     Ver detalhes
                                                 </Link>
-                                                
-                                                <button
+
+                                                <Botao
                                                     type="button"
-                                                    className="botao-editar"
                                                     onClick={() => editar(usuario)}
+                                                    className="px-3 py-2 text-xs"
                                                 >
                                                     Editar
-                                                </button>
+                                                </Botao>
 
-                                                <button
+                                                <Botao
                                                     type="button"
-                                                    className="botao-excluir"
+                                                    variante="perigo"
                                                     onClick={() => excluir(usuario.id)}
+                                                    className="px-3 py-2 text-xs"
                                                 >
                                                     Excluir
-                                                </button>
+                                                </Botao>
                                             </div>
                                         </td>
                                     </tr>

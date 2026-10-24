@@ -3,7 +3,7 @@ package br.ueg.trindade.agendaservicos.model;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -21,7 +21,7 @@ public class Permissao {
     private String descricao;
     
     @ManyToMany(mappedBy = "permissoes")
-    @JsonBackReference
+    @JsonIgnore
     private Set<Usuario> usuarios = new HashSet<>();
 
     public Permissao() {
