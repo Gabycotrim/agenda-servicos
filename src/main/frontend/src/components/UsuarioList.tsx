@@ -1,4 +1,5 @@
 
+import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import api from "../services/api";
 import type { Usuario } from "../types/Usuario";
@@ -116,6 +117,12 @@ function UsuarioList() {
                                         <td>{usuario.email}</td>
                                         <td>
                                             <div className="acoes-tabela">
+                                                <Link to={`/usuarios/${usuario.id}`}
+                                                    className="botao-editar"
+                                                    >
+                                                    Ver detalhes
+                                                </Link>
+                                                
                                                 <button
                                                     type="button"
                                                     className="botao-editar"
