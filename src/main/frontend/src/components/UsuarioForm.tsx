@@ -17,24 +17,36 @@ function UsuarioForm({
     const [username, setUsername] = useState(usuarioEditando?.username ?? "");
     const [email, setEmail] = useState(usuarioEditando?.email ?? "");
 
-    async function handleSubmit(event: React.FormEvent) {
-        event.preventDefault();
+    
+async function handleSubmit(event: React.FormEvent) {
+    event.preventDefault();
 
-        const dados = { nome, username, email };
+    const dados = { nome, username, email };
 
-        try {
-            if (usuarioEditando) {
-                await api.put(`/usuarios/${usuarioEditando.id}`, dados);
-            } else {
-                await api.post("/usuarios", dados);
-            }
+    try {
+        if (usuarioEditando) {
+            await api.put(`/usuarios/${usuarioEditando.id}`, dados);
 
-            onUsuarioSalvo();
+            alert("Usuário atualizado com sucesso!");
+        } else {
+            await api.post("/usuarios", dados);
+
+            alert("Usuário cadastrado com sucesso!");
+
+            // Limpa os campos após o cadastro
+            setNome("");
+            setUsername("");
+            setEmail("");
+        }
+
+        onUsuarioSalvo();
+
         } catch (erro) {
             console.error("Erro ao salvar usuário:", erro);
             alert("Não foi possível salvar o usuário.");
         }
     }
+
 
     return (
         <form

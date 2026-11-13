@@ -10,6 +10,13 @@ interface ServicoFormProps {
     onCancelarEdicao: () => void;
 }
 
+interface ErrosFormulario {
+    nome?: string;
+    descricao?: string;
+    preco?: string;
+    duracaoMinutos?: string;
+}
+
 function ServicoForm({
     onServicoSalvo,
     servicoEditando,
@@ -19,6 +26,7 @@ function ServicoForm({
     const [descricao, setDescricao] = useState("");
     const [preco, setPreco] = useState("");
     const [duracaoMinutos, setDuracaoMinutos] = useState("");
+    const [erros, setErros] = useState<ErrosFormulario>({});
 
     useEffect(() => {
         if (servicoEditando) {
@@ -36,14 +44,48 @@ function ServicoForm({
         setDescricao("");
         setPreco("");
         setDuracaoMinutos("");
+        setErros({});
+    }
+
+    function validarFormulario(): boolean {
+        const novosErros: ErrosFormulario = {};
+
+        if (!nome.trim()) {
+            novosErros.nome = "Informe o nome do serviço.";
+        }
+
+        if (!descricao.trim()) {
+            novosErros.descricao = "Informe a descrição do serviço.";
+        }
+
+        if (!preco || Number(preco) <= 0 || !Number.isFinite(Number(preco))) {
+            novosErros.preco = "Informe um preço maior que zero.";
+        }
+
+        if (
+            !duracaoMinutos ||
+            !Number.isInteger(Number(duracaoMinutos)) ||
+            Number(duracaoMinutos) <= 0
+        ) {
+            novosErros.duracaoMinutos =
+                "Informe uma duração válida, em minutos.";
+        }
+
+        setErros(novosErros);
+
+        return Object.keys(novosErros).length === 0;
     }
 
     async function handleSubmit(event: React.FormEvent) {
         event.preventDefault();
 
+        if (!validarFormulario()) {
+            return;
+        }
+
         const dados = {
-            nome,
-            descricao,
+            nome: nome.trim(),
+            descricao: descricao.trim(),
             preco: Number(preco),
             duracaoMinutos: Number(duracaoMinutos),
         };
@@ -69,6 +111,7 @@ function ServicoForm({
         <form
             className="space-y-4 rounded-lg border border-gray-200 bg-white p-5 shadow-sm"
             onSubmit={handleSubmit}
+            noValidate
         >
             <div className="space-y-1">
                 <label htmlFor="nome" className="block text-sm font-medium text-gray-700">
@@ -78,11 +121,16 @@ function ServicoForm({
                     id="nome"
                     type="text"
                     value={nome}
-                    onChange={(e) => setNome(e.target.value)}
+                    onChange={(e) => {
+                        setNome(e.target.value);
+                        setErros((anterior) => ({ ...anterior, nome: "" }));
+                    }}
                     placeholder="Digite o nome do serviço"
                     className="w-full rounded-md border border-gray-300 px-3 py-2"
-                    required
                 />
+                {erros.nome && (
+                    <p className="text-sm text-red-600">{erros.nome}</p>
+                )}
             </div>
 
             <div className="space-y-1">
@@ -92,11 +140,16 @@ function ServicoForm({
                 <textarea
                     id="descricao"
                     value={descricao}
-                    onChange={(e) => setDescricao(e.target.value)}
+                    onChange={(e) => {
+                        setDescricao(e.target.value);
+                        setErros((anterior) => ({ ...anterior, descricao: "" }));
+                    }}
                     placeholder="Descreva o serviço"
                     className="w-full rounded-md border border-gray-300 px-3 py-2"
-                    required
                 />
+                {erros.descricao && (
+                    <p className="text-sm text-red-600">{erros.descricao}</p>
+                )}
             </div>
 
             <div className="space-y-1">
@@ -109,11 +162,16 @@ function ServicoForm({
                     min="0.01"
                     step="0.01"
                     value={preco}
-                    onChange={(e) => setPreco(e.target.value)}
+                    onChange={(e) => {
+                        setPreco(e.target.value);
+                        setErros((anterior) => ({ ...anterior, preco: "" }));
+                    }}
                     placeholder="Ex.: 35.00"
                     className="w-full rounded-md border border-gray-300 px-3 py-2"
-                    required
                 />
+                {erros.preco && (
+                    <p className="text-sm text-red-600">{erros.preco}</p>
+                )}
             </div>
 
             <div className="space-y-1">
@@ -124,12 +182,23 @@ function ServicoForm({
                     id="duracaoMinutos"
                     type="number"
                     min="1"
+                    step="1"
                     value={duracaoMinutos}
-                    onChange={(e) => setDuracaoMinutos(e.target.value)}
+                    onChange={(e) => {
+                        setDuracaoMinutos(e.target.value);
+                        setErros((anterior) => ({
+                            ...anterior,
+                            duracaoMinutos: "",
+                        }));
+                    }}
                     placeholder="Ex.: 30"
                     className="w-full rounded-md border border-gray-300 px-3 py-2"
-                    required
                 />
+                {erros.duracaoMinutos && (
+                    <p className="text-sm text-red-600">
+                        {erros.duracaoMinutos}
+                    </p>
+                )}
             </div>
 
             <div className="flex flex-wrap gap-2">
