@@ -7,6 +7,7 @@ import java.util.HashSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 
 import br.ueg.trindade.agendaservicos.model.Usuario;
@@ -24,6 +25,10 @@ public class UsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+     @Autowired
+    private PasswordEncoder passwordEncoder;
+        
+
     public List<Usuario> listarTodos() {
         return usuarioRepository.findAll();
     }
@@ -34,7 +39,14 @@ public class UsuarioService {
     }
 
     public Usuario criar(Usuario usuario) {
-        return usuarioRepository.save(usuario);
+
+    if (usuario.getSenha() == null || usuario.getSenha().isBlank()) {
+        throw new IllegalArgumentException("A senha é obrigatória.");
+    }
+
+    usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
+
+    return usuarioRepository.save(usuario);
     }
 
     public Usuario atualizar(Long id, Usuario usuarioAtualizado) {
@@ -45,6 +57,9 @@ public class UsuarioService {
         usuario.setNome(usuarioAtualizado.getNome());
         usuario.setUsername(usuarioAtualizado.getUsername());
         usuario.setEmail(usuarioAtualizado.getEmail());
+        if (usuarioAtualizado.getSenha() != null
+        && !usuarioAtualizado.getSenha().isBlank()) {
+        usuario.setSenha(passwordEncoder.encode(usuarioAtualizado.getSenha()));}
 
         return usuarioRepository.save(usuario);
     }

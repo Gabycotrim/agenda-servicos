@@ -16,12 +16,38 @@ function UsuarioForm({
     const [nome, setNome] = useState(usuarioEditando?.nome ?? "");
     const [username, setUsername] = useState(usuarioEditando?.username ?? "");
     const [email, setEmail] = useState(usuarioEditando?.email ?? "");
+    const [senha, setSenha] = useState("");
+    const [confirmarSenha, setConfirmarSenha] = useState("");
 
     
 async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
 
-    const dados = { nome, username, email };
+    // Valida a senha no cadastro
+    if (!usuarioEditando && !senha) {
+    alert("A senha é obrigatória para cadastrar um usuário.");
+    return;
+    }
+
+    // Valida o tamanho da senha
+    if (senha && senha.length < 8) {
+    alert("A senha deve ter pelo menos 8 caracteres.");
+    return;
+    }
+
+    // Confere se as senhas são iguais
+    if (senha !== confirmarSenha) {
+    alert("A senha e a confirmação não são iguais.");
+    return;
+    }
+
+    // Monta os dados do usuário
+    const dados = {
+    nome,
+    username,
+    email,
+    ...(senha ? { senha } : {})
+    };
 
     try {
         if (usuarioEditando) {
@@ -37,6 +63,8 @@ async function handleSubmit(event: React.FormEvent) {
             setNome("");
             setUsername("");
             setEmail("");
+            setSenha("");
+            setConfirmarSenha("");
         }
 
         onUsuarioSalvo();
@@ -106,6 +134,47 @@ async function handleSubmit(event: React.FormEvent) {
                     required
                 />
             </div>
+
+            <div className="space-y-1">
+    <label
+        htmlFor="senha"
+        className="block text-sm font-medium text-gray-700"
+    >
+        {usuarioEditando ? "Nova senha (opcional)" : "Senha"}
+    </label>
+
+    <input
+        id="senha"
+        type="password"
+        value={senha}
+        onChange={(e) => setSenha(e.target.value)}
+        placeholder="Digite uma senha com pelo menos 8 caracteres"
+        className="w-full rounded-md border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+        required={!usuarioEditando}
+        minLength={8}
+        autoComplete="new-password"
+    />
+</div>
+
+<div className="space-y-1">
+    <label
+        htmlFor="confirmarSenha"
+        className="block text-sm font-medium text-gray-700"
+    >
+        Confirmar senha
+    </label>
+
+    <input
+        id="confirmarSenha"
+        type="password"
+        value={confirmarSenha}
+        onChange={(e) => setConfirmarSenha(e.target.value)}
+        placeholder="Digite novamente a senha"
+        className="w-full rounded-md border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+        required={!usuarioEditando || senha.length > 0}
+        autoComplete="new-password"
+    />
+</div>
 
             <Botao type="submit">
                 {usuarioEditando ? "Atualizar usuário" : "Cadastrar usuário"}

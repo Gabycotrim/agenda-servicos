@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import br.ueg.trindade.agendaservicos.model.Usuario;
 import br.ueg.trindade.agendaservicos.service.UsuarioService;
@@ -24,21 +25,25 @@ public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
 
+    @PreAuthorize("hasRole('Administrador')")
     @GetMapping("/usuarios")
     public List<Usuario> getAllUsuarios() {
         return usuarioService.listarTodos();
     }
 
+    @PreAuthorize("hasRole('Administrador')")
     @GetMapping("/usuarios/{id}")
     public Usuario getUsuarioById(@PathVariable Long id) {
         return usuarioService.buscarPorId(id);
     }
 
+    @PreAuthorize("hasRole('Administrador')")
     @GetMapping("/usuarios/{id}/permissoes")
     public Usuario getPermissoesUsuario(@PathVariable Long id) {
     return usuarioService.buscarPorId(id);
     }
 
+    @PreAuthorize("hasRole('Administrador')")
     @PutMapping("/usuarios/{id}/permissoes")
     public Usuario atribuirPermissoes(
         @PathVariable Long id,
@@ -47,11 +52,13 @@ public class UsuarioController {
     return usuarioService.atribuirPermissoes(id, idsPermissoes);
     }
 
+    @PreAuthorize("hasRole('Administrador')")
     @PostMapping("/usuarios")
     public Usuario createUsuario(@RequestBody Usuario usuario) {
         return usuarioService.criar(usuario);
     }
 
+    @PreAuthorize("hasRole('Administrador')")
     @PutMapping("/usuarios/{id}")
     public Usuario updateUsuario(
             @PathVariable Long id,
@@ -60,6 +67,7 @@ public class UsuarioController {
         return usuarioService.atualizar(id, usuarioAtualizado);
     }
 
+    @PreAuthorize("hasRole('Administrador')")
     @DeleteMapping("/usuarios/{id}")
     public void deleteUsuario(@PathVariable Long id) {
         usuarioService.excluir(id);
