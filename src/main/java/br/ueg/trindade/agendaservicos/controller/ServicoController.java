@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import br.ueg.trindade.agendaservicos.model.Servico;
 import br.ueg.trindade.agendaservicos.service.ServicoService;
@@ -35,11 +36,13 @@ public class ServicoController {
         return servicoService.buscarPorId(id);
     }
 
+    @PreAuthorize("hasRole('Administrador')")    
     @PostMapping("/servicos")
     public Servico criar(@RequestBody Servico servico) {
         return servicoService.criar(servico);
     }
 
+    @PreAuthorize("hasRole('Administrador')")
     @PutMapping("/servicos/{id}")
     public Servico atualizar(
             @PathVariable Long id,
@@ -47,6 +50,7 @@ public class ServicoController {
         return servicoService.atualizar(id, servicoAtualizado);
     }
 
+    @PreAuthorize("hasRole('Administrador')")
     @DeleteMapping("/servicos/{id}")
     public void excluir(@PathVariable Long id) {
         servicoService.excluir(id);
