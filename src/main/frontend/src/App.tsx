@@ -11,6 +11,7 @@ import PermissoesPage from "./pages/PermissoesPage";
 import ServicosPage from "./pages/ServicosPage";
 import UsuarioPermissoesPage from "./pages/UsuarioPermissoesPage";
 import UsuarioDetailPage from "./pages/UsuarioDetailPage";
+import ClientesPage from "./pages/ClientesPage";
 
 function App() {
     return (
@@ -32,6 +33,7 @@ function App() {
                 <Route path="usuarios/:id" element={<UsuarioDetailPage />} />
                 <Route path="permissoes" element={<PermissoesPage />} />
                 <Route path="servicos" element={<ServicosPage />} />
+                <Route path="clientes" element={<ClientesPage />} />
                 <Route
                     path="atribuir-permissoes"
                     element={<UsuarioPermissoesPage />}

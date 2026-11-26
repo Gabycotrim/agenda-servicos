@@ -1,11 +1,24 @@
+
 package br.ueg.trindade.agendaservicos.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity
 public class Cliente {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String nome;
     private String telefone;
     private String email;
+
+    public Cliente() {
+    }
 
     public Cliente(Long id, String nome, String telefone, String email) {
         this.id = id;

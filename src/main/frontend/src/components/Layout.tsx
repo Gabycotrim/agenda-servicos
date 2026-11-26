@@ -17,6 +17,7 @@ function Layout() {
             ]
             : []),
         { to: "/servicos", label: "Serviços" },
+        { to: "/clientes", label: "Clientes" },
         ...(administrador
             ? [{ to: "/atribuir-permissoes", label: "Atribuir Permissões" }]
             : []),
