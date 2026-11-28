@@ -18,6 +18,8 @@ function Layout() {
             : []),
         { to: "/servicos", label: "Serviços" },
         { to: "/clientes", label: "Clientes" },
+        { to: "/agendamentos", label: "Agendamentos" },
+        { to: "/itens-agendamento", label: "Itens de Agendamento" },
         ...(administrador
             ? [{ to: "/atribuir-permissoes", label: "Atribuir Permissões" }]
             : []),

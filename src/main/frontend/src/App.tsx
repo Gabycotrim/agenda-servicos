@@ -12,6 +12,8 @@ import ServicosPage from "./pages/ServicosPage";
 import UsuarioPermissoesPage from "./pages/UsuarioPermissoesPage";
 import UsuarioDetailPage from "./pages/UsuarioDetailPage";
 import ClientesPage from "./pages/ClientesPage";
+import AgendamentosPage from "./pages/AgendamentosPage";
+import ItensAgendamentoPage from "./pages/ItensAgendamentoPage";
 
 function App() {
     return (
@@ -34,6 +36,9 @@ function App() {
                 <Route path="permissoes" element={<PermissoesPage />} />
                 <Route path="servicos" element={<ServicosPage />} />
                 <Route path="clientes" element={<ClientesPage />} />
+                <Route path="agendamentos" element={<AgendamentosPage />} />
+                <Route path="itens-agendamento" element={<ItensAgendamentoPage />}
+                />
                 <Route
                     path="atribuir-permissoes"
                     element={<UsuarioPermissoesPage />}
